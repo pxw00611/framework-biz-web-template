@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: demo-web-videostream
+  profiles:
+    active: dev
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: ${OSS_ENDPOINT:oss-cn-hangzhou.aliyuncs.com}
+    accessKeyId: ${OSS_ACCESS_KEY_ID:your-access-key-id}
+    accessKeySecret: ${OSS_ACCESS_KEY_SECRET:your-access-key-secret}
+
+# 日志配置
+logging:
+  level:
+    com.alibaba.demo: DEBUG
+    org.bytedeco: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/demo-web.log
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+aliyun:
+  oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    accessKeyId: your-dev-access-key-id
+    accessKeySecret: your-dev-access-key-secret
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+      
+aliyun:
+  oss:
+    endpoint: ${OSS_ENDPOINT}
+    accessKeyId: ${OSS_ACCESS_KEY_ID}
+    accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
+
+logging:
+  level:
+    com.alibaba.demo: INFO
